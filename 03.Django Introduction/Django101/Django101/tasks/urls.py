@@ -1,5 +1,3 @@
-# django101.tasks.urls.py
-
 from django.urls import path
 
 from Django101.tasks.views import show_bare_minimum_view, show_all_tasks, index
