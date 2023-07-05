@@ -7,19 +7,21 @@
         <div class="login-register-box">
             <h1>Petstagram</h1>
 
-            <!-- Start Register Form -->
+
             <form action="{% url 'register user' %}" method="post">
                 {{ form.username }}
                 {{ form.email }}
                 {{ form.password1 }}
                 {{ form.password2 }}
 
+                <input type="hidden" name="next" value="{{ next }}">
+
                 {% csrf_token %}
 
-                <!-- Register Button -->
+
                 <button type="submit">Register</button>
             </form>
-            <!-- End Register Form -->
+
 
         </div>
         <div class="second-option">

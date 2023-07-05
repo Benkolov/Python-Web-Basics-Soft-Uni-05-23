@@ -1,6 +1,7 @@
+from django.urls import reverse_lazy
 from django.views import generic as views
 from django.shortcuts import render
-from django.contrib.auth import views as auth_views
+from django.contrib.auth import views as auth_views, login
 from Petstagram.accounts.forms import RegisterUserForm
 from Petstagram.pets.models import Pet
 
@@ -8,6 +9,15 @@ from Petstagram.pets.models import Pet
 class RegisterUserView(views.CreateView):
     template_name = 'accounts/register-page.html'
     form_class = RegisterUserForm
+    success_url = reverse_lazy('index')
+
+    def form_valid(self, form):
+        result = super().form_valid(form)
+        user = self.object
+
+        login(self.request, user)
+
+        return result
 
 
 class LoginUserView(auth_views.LoginView):
