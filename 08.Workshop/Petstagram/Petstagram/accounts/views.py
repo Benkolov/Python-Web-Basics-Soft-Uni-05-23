@@ -1,8 +1,19 @@
+from django.views import generic as views
 from django.shortcuts import render
+from django.contrib.auth import views as auth_views
 from Petstagram.pets.models import Pet
 
-# Create your views here.
 
+class RegisterUserView(views.CreateView):
+    pass
+
+
+class LoginUserView(auth_views.LoginView):
+    pass
+
+
+class LogoutUserView(auth_views.LogoutView):
+    pass
 
 def register_user(request):
     return render(request, 'accounts/register-page.html')

@@ -62,4 +62,3 @@ def comment_functionality(request, photo_id):
             new_comment_instance.save()
 
         return redirect(request.META['HTTP_REFERER'] + f"#{photo_id}")
-
