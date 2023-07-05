@@ -1,15 +1,18 @@
 from django.views import generic as views
 from django.shortcuts import render
 from django.contrib.auth import views as auth_views
+from Petstagram.accounts.forms import RegisterUserForm
 from Petstagram.pets.models import Pet
 
 
 class RegisterUserView(views.CreateView):
-    pass
+    template_name = 'accounts/register-page.html'
+    form_class = RegisterUserForm
 
 
 class LoginUserView(auth_views.LoginView):
-    pass
+    template_name = 'accounts/login-page.html'
+    # success_url = ''
 
 
 class LogoutUserView(auth_views.LogoutView):
@@ -19,8 +22,6 @@ def register_user(request):
     return render(request, 'accounts/register-page.html')
 
 
-def login_user(request):
-    return render(request, 'accounts/login-page.html')
 
 
 def profile_details(request, pk):

@@ -1,8 +1,10 @@
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from .models import Pet
 from .forms import PetAddForm, PetEditForm, PetDeleteForm
 
 
+@login_required
 def pet_add(request):
     form = PetAddForm()
 
@@ -22,6 +24,7 @@ def pet_add(request):
     return render(request, 'pets/pet-add-page.html', context=context)
 
 
+@login_required
 def pet_details(request, username, pet_name):
     pet = Pet.objects.filter(slug=pet_name).first()
     all_photos = pet.photo_set.all()
@@ -34,6 +37,7 @@ def pet_details(request, username, pet_name):
     return render(request, 'pets/pet-details-page.html', context=context)
 
 
+@login_required
 def pet_edit(request, username, pet_name):
     pet = Pet.objects.filter(slug=pet_name).first()
     form = PetEditForm(instance=pet)
@@ -54,6 +58,7 @@ def pet_edit(request, username, pet_name):
     return render(request, 'pets/pet-edit-page.html', context=context)
 
 
+@login_required
 def pet_delete(request, username, pet_name):
     pet = Pet.objects.filter(slug=pet_name).first()
     form = PetDeleteForm(instance=pet)

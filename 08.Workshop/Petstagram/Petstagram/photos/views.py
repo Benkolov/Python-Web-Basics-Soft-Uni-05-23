@@ -1,11 +1,11 @@
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from Petstagram.common.forms import CommentForm
 from .forms import PhotoAddForm, PhotoEditForm
 from .models import Photo
 
 
-# Create your views here.
-
+@login_required
 def photo_add(request):
     form = PhotoAddForm()
 
@@ -22,6 +22,7 @@ def photo_add(request):
     return render(request, 'photos/photo-add-page.html', context=context)
 
 
+@login_required
 def photo_details(request, pk):
     photo = Photo.objects.get(pk=pk)
     comment_form = CommentForm()
@@ -40,6 +41,7 @@ def photo_details(request, pk):
     )
 
 
+@login_required
 def photo_edit(request, pk):
     photo = Photo.objects.get(pk=pk)
     form = PhotoEditForm(instance=photo)
@@ -58,6 +60,7 @@ def photo_edit(request, pk):
     return render(request, 'photos/photo-edit-page.html', context)
 
 
+@login_required
 def photo_delete(request, pk):
     photo = Photo.objects.get(pk=pk)
     photo.delete()
