@@ -19,6 +19,16 @@ class RegisterUserView(views.CreateView):
 
         return result
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        context['next'] = self.request.GET.get('next', '')
+
+        return context
+
+    def get_success_url(self):
+        return self.request.POST.get('next', self.success_url)
+
 
 class LoginUserView(auth_views.LoginView):
     template_name = 'accounts/login-page.html'
@@ -27,11 +37,6 @@ class LoginUserView(auth_views.LoginView):
 
 class LogoutUserView(auth_views.LogoutView):
     pass
-
-def register_user(request):
-    return render(request, 'accounts/register-page.html')
-
-
 
 
 def profile_details(request, pk):
