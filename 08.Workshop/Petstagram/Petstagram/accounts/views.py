@@ -39,19 +39,25 @@ class LogoutUserView(auth_views.LogoutView):
     pass
 
 
-def profile_details(request, pk):
-    pets = Pet.objects.all()
-
-    context = {
-        "pets": pets,
-    }
-
-    return render(request, 'accounts/profile-details-page.html', context=context)
+class ProfileDetailsView(views.DetailView):
+    template_name = 'accounts/profile-details-page.html'
 
 
-def profile_edit(request, pk):
-    return render(request, 'accounts/profile-edit-page.html')
+
+# def profile_details(request, pk):
+#     pets = Pet.objects.all()
+#
+#     context = {
+#         "pets": pets,
+#     }
+#
+#     return render(request, 'accounts/profile-details-page.html', context=context)
 
 
-def profile_delete(request, pk):
-    return render(request, 'accounts/profile-delete-page.html')
+class ProfileEditView(views.UpdateView):
+    template_name = 'accounts/profile-edit-page.html'
+
+
+class ProfileDeleteView(views.DeleteView):
+    template_name = 'accounts/profile-delete-page.html'
+
