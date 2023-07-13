@@ -1,21 +1,63 @@
+from django.urls import reverse_lazy
+from django.views import generic as views
 from django.shortcuts import render
+from django.contrib.auth import views as auth_views, login
+from Petstagram.accounts.forms import RegisterUserForm
+from Petstagram.pets.models import Pet
 
 
-def register_user(request):
-    return render(request, 'accounts/register-page.html')
+class RegisterUserView(views.CreateView):
+    template_name = 'accounts/register-page.html'
+    form_class = RegisterUserForm
+    success_url = reverse_lazy('index')
+
+    def form_valid(self, form):
+        result = super().form_valid(form)
+        user = self.object
+
+        login(self.request, user)
+
+        return result
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        context['next'] = self.request.GET.get('next', '')
+
+        return context
+
+    def get_success_url(self):
+        return self.request.POST.get('next', self.success_url)
 
 
-def login_user(request):
-    return render(request, 'accounts/login-page.html')
+class LoginUserView(auth_views.LoginView):
+    template_name = 'accounts/login-page.html'
+    # success_url = ''
 
 
-def profile_details(request, pk):
-    return render(request, 'accounts/profile-details-page.html')
+class LogoutUserView(auth_views.LogoutView):
+    pass
 
 
-def profile_edit(request, pk):
-    return render(request, 'accounts/profile-edit-page.html')
+class ProfileDetailsView(views.DetailView):
+    template_name = 'accounts/profile-details-page.html'
 
 
-def profile_delete(request, pk):
-    return render(request, 'accounts/profile-delete-page.html')
+
+# def profile_details(request, pk):
+#     pets = Pet.objects.all()
+#
+#     context = {
+#         "pets": pets,
+#     }
+#
+#     return render(request, 'accounts/profile-details-page.html', context=context)
+
+
+class ProfileEditView(views.UpdateView):
+    template_name = 'accounts/profile-edit-page.html'
+
+
+class ProfileDeleteView(views.DeleteView):
+    template_name = 'accounts/profile-delete-page.html'
+

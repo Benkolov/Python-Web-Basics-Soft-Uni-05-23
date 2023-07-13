@@ -1,22 +1,67 @@
-from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render, redirect
+from Petstagram.common.forms import CommentForm
+from .forms import PhotoAddForm, PhotoEditForm
+from .models import Photo
 
-from Petstagram.photos.models import Photo
 
-
+@login_required
 def photo_add(request):
-    return render(request, 'photos/photo-add-page.html')
+    form = PhotoAddForm()
 
-
-def photo_details(request, pk):
-    photo = Photo.objects.get(pk=pk)
+    if request.method == "POST":
+        form = PhotoAddForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            return redirect('index')
 
     context = {
-        'photo': photo,
-        'likes': photo.like_set.count(),
-        'comments': photo.comment_set.all(),
+        "form": form,
     }
-    return render(request, 'photos/photo-details-page.html', context=context)
+
+    return render(request, 'photos/photo-add-page.html', context=context)
 
 
+@login_required
+def photo_details(request, pk):
+    photo = Photo.objects.get(pk=pk)
+    comment_form = CommentForm()
+
+    context = {
+        "photo": photo,
+        "likes": photo.like_set.count(),
+        "comments": photo.comment_set.all(),
+        "comment_form": comment_form,
+    }
+
+    return render(
+        request,
+        'photos/photo-details-page.html',
+        context=context
+    )
+
+
+@login_required
 def photo_edit(request, pk):
-    return render(request, 'photos/photo-edit-page.html')
+    photo = Photo.objects.get(pk=pk)
+    form = PhotoEditForm(instance=photo)
+
+    if request.method == "POST":
+        form = PhotoEditForm(request.POST, instance=photo)
+        if form.is_valid():
+            form.save()
+            return redirect('photo details', pk=pk)
+
+    context = {
+        "photo": photo,
+        "form": form,
+    }
+
+    return render(request, 'photos/photo-edit-page.html', context)
+
+
+@login_required
+def photo_delete(request, pk):
+    photo = Photo.objects.get(pk=pk)
+    photo.delete()
+    return redirect('index')
